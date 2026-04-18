@@ -7,6 +7,16 @@
 
 ---
 
+## 🏗 실습 환경 아키텍처
+
+[Windows 10] ──SSH(PuTTY)──▶ [Ubuntu 24.04 / VMware]
+     │                              │
+     └──FTP(21)──────────▶  Apache2(80) / vsftpd
+                                   │
+                            /var/www/html/index.html
+
+---
+
 ## 1. 학습 개요
 - 환경: Ubuntu 24.04 (VMware), PuTTY(SSH)
 - 범위: 사용자 관리, 권한, 웹/FTP 서버 구축
