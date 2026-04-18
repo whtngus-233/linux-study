@@ -10,18 +10,25 @@
 ## 🧱 실습 환경 아키텍처
 
 ```
-[ Windows 11 ]
-     │
-     ├─ SSH (Port 22 / PuTTY)
-     │
-     ├─ FTP (Port 21 / CMD)
-     ▼
-[ Ubuntu 24.04 (VMware) ]
-     │
-     ├─ Apache2 (Port 80)
-     │       └─ /var/www/html/index.html
-     │
-     └─ vsftpd (파일 업로드)
+[ Host: Windows 11 ] 
+      │
+      │ (1) SSH 접속 (PuTTY / 192.168.10.128)
+      ▼
+┌────────────────── [ VMware Workstation ] ──────────────────┐
+│                                                            │
+│  [ Guest 1: Windows 11 ]        [ Guest 2: Ubuntu 24.04 ]  │
+│  (Client Role)                  (Server Role: .128)        │
+│          │                                 │               │
+│          │ (2) FTP 접속 & 파일 전송          │               │
+│          └────────────────────────────────▶│── [vsftpd]    │
+│            (index.html 업로드)              │      │        │
+│                                            │ (3) mv 명령   │
+│                                            │      ▼        │
+│                                            └── [Apache2]   │
+│                                                    │       │
+└────────────────────────────────────────────────────┼───────┘
+      ▲                                              │
+      └─────── (4) 웹 브라우저 접속 (http://192.168.10.128) ──┘
 ```
 
 ---
