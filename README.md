@@ -7,7 +7,7 @@
 
 ---
 
-## 🏗 실습 환경 아키텍처
+## 실습 환경 아키텍처
 
 [Windows 10] ──SSH(PuTTY)──▶ [Ubuntu 24.04 / VMware]
      │                              │
