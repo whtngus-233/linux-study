@@ -9,11 +9,13 @@
 
 ## 실습 환경 아키텍처
 
-[Windows 10] ──SSH(PuTTY)──▶ [Ubuntu 24.04 / VMware]
-     │                              │
-     └──FTP(21)──────────▶  Apache2(80) / vsftpd
-                                   │
-                            /var/www/html/index.html
+[ Windows 11 ]
+      │
+      ├─ SSH (Port 22 / PuTTY) ──▶ [ Ubuntu 24.04 (VMware) ]
+      │                                    │
+      ├─ HTTP (Port 80) ──────────▶ [ Apache2 ] ──▶ /var/www/html/index.html
+      │                                    │
+      └─ FTP (Port 21) ───────────▶ [ vsftpd  ] ──▶ /home/user1/
 
 ---
 
@@ -129,6 +131,7 @@
 | i | 입력 모드 |
 | esc | 명령 모드 |
 | :w | 저장 |
+| :x | 지우기 |
 | :q | 종료 |
 | :wq | 저장 후 종료 |
 | :q! | 저장 없이 강제 종료 |
