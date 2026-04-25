@@ -79,12 +79,12 @@
 브라우저에서 `http://192.168.10.128` 접속 시 403 응답 —  
 원인은 `index.html` 권한이 `600`이어서 Apache가 읽을 수 없었기 때문.
 
-<img width="873" height="689" alt="image" src="https://github.com/user-attachments/assets/78295ca5-d61c-4f4e-92cc-d584c7ac305a" />
+<img width="767" height="414" alt="image" src="https://github.com/user-attachments/assets/0d26ee71-4d59-419c-8ba1-95be7da48745" />
 
 ### 2. 정상 출력
 파일 권한을 `644`로 변경한 뒤 브라우저에서 정상적으로 페이지가 출력되는 모습.
 
-<img width="876" height="435" alt="image" src="https://github.com/user-attachments/assets/b9c52e34-30f4-47dc-9eb9-d0e505aca02e" />
+<img width="642" height="306" alt="image" src="https://github.com/user-attachments/assets/ae178497-d224-43aa-8415-c4a2c3551bc1" />
 
 ### 3. chmod 변경 전/후
 `chmod 644` 적용 전(`-rw-------`)과 적용 후(`-rw-r--r--`) 권한 비교.
