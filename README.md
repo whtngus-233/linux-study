@@ -1,9 +1,31 @@
-# linux-study
+Copy# linux-study
+
+> Ubuntu 서버에서 직접 겪은 **403 Forbidden / Permission denied / ping 차단**  
+> 트러블슈팅 3건을 권한·서비스·네트워크 레이어로 분리 분석한 학습 기록
 
 리눅스(Ubuntu) 환경에서 직접 서버를 구성하고  
 사용자 / 권한 / 네트워크 문제를 해결하며 학습한 내용을 기록한 저장소입니다.
 
 단순 명령어 정리가 아니라 **실제 서비스 동작과 트러블슈팅 경험**을 중심으로 구성했습니다.
+
+---
+
+## 🎯 이 레포에서 볼 수 있는 것
+
+- 같은 에러(403)도 원인은 **파일 권한 / 디렉터리 권한 / 서비스 설정**으로 나뉜다는 레이어별 분석
+- `chmod 777`로 끝내지 않고 **vsftpd 설정**까지 파고든 디버깅 과정
+- **클라이언트 → FTP → Apache** 전체 서비스 플로우를 직접 구성한 실습 기록
+- 트러블슈팅 케이스별 **블로그 상세 분석 글**과 연결된 포트폴리오 구조
+
+---
+
+## 📖 트러블슈팅 시리즈 (블로그 상세 분석)
+
+이 저장소의 트러블슈팅 케이스는 블로그에 시리즈로 상세 분석되어 있습니다.
+
+- [1편: Apache 403 — 파일 권한 문제](https://velog.io/@whtngus233/Linux-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EC%8B%A4%EC%A0%84-%EB%B6%84%EC%84%9D-1%ED%8E%B8-Apache-403-%ED%8C%8C%EC%9D%BC-%EA%B6%8C%ED%95%9C-%EB%AC%B8%EC%A0%9C)
+- [2편: Apache 403 — 디렉터리 x 권한 문제](https://velog.io/@whtngus233/%ED%8C%8C%EC%9D%BC-%EA%B6%8C%ED%95%9C%EC%9D%B4-%EC%A0%95%EC%83%81%EC%9D%B4%EB%8D%94%EB%9D%BC%EB%8F%84-%EA%B2%BD%EB%A1%9C-%EC%A0%91%EA%B7%BC-%EA%B6%8C%ED%95%9C%EC%9D%B4-%EC%97%86%EC%9C%BC%EB%A9%B4-403%EC%9D%B4-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+- [3편: vsftpd 업로드 실패 — write_enable 설정](https://velog.io/@whtngus233/Permission-denied%EC%9D%98-%EC%9B%90%EC%9D%B8%EC%9D%B4-chmod%EA%B0%80-%EC%95%84%EB%8B%88%EB%9D%BC-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EC%A0%95%EC%9D%B4%EC%97%88%EB%8D%98-%EC%82%AC%EB%A1%80-%EB%B6%84%EC%84%9D)
 
 ---
 
@@ -37,32 +59,41 @@
 
 본 실습은 클라이언트 → 서버 → 웹 서비스 구조로 진행되었습니다.
 
-1. Windows 11 (클라이언트)
-- PuTTY를 통해 Ubuntu 서버에 SSH 접속
-- CMD에서 FTP 접속을 통해 파일 업로드 수행
+1. **Windows 11 (클라이언트)**
+   - PuTTY를 통해 Ubuntu 서버에 SSH 접속
+   - CMD에서 FTP 접속을 통해 파일 업로드 수행
 
-2. Ubuntu 24.04 (서버)
-- FTP(vsftpd)를 통해 클라이언트 파일 수신
-- 업로드된 파일을 웹 서버 경로(/var/www/html)로 이동
+2. **Ubuntu 24.04 (서버)**
+   - FTP(vsftpd)를 통해 클라이언트 파일 수신
+   - 업로드된 파일을 웹 서버 경로(`/var/www/html`)로 이동
 
-3. Apache 웹 서버
-- index.html 파일을 읽어 브라우저에 제공
-- 웹 페이지 정상 출력 확인
+3. **Apache 웹 서버**
+   - `index.html` 파일을 읽어 브라우저에 제공
+   - 웹 페이지 정상 출력 확인
 
 ---
 
 ## 📸 실습 스크린샷
 
 ### 1. 403 Forbidden 발생
+브라우저에서 `http://192.168.10.128` 접속 시 403 응답 —  
+원인은 `index.html` 권한이 `600`이어서 Apache가 읽을 수 없었기 때문.
+
 <img width="873" height="689" alt="image" src="https://github.com/user-attachments/assets/78295ca5-d61c-4f4e-92cc-d584c7ac305a" />
 
 ### 2. 정상 출력
+파일 권한을 `644`로 변경한 뒤 브라우저에서 정상적으로 페이지가 출력되는 모습.
+
 <img width="876" height="435" alt="image" src="https://github.com/user-attachments/assets/b9c52e34-30f4-47dc-9eb9-d0e505aca02e" />
 
 ### 3. chmod 변경 전/후
+`chmod 644` 적용 전(`-rw-------`)과 적용 후(`-rw-r--r--`) 권한 비교.
+
 <img width="741" height="232" alt="image" src="https://github.com/user-attachments/assets/c7eb2274-8d81-4443-bd42-bd7430ae0cec" />
 
 ### 4. FTP 업로드 성공
+`vsftpd.conf`의 `write_enable=YES` 활성화 후 클라이언트에서 파일 업로드 성공.
+
 <img width="876" height="688" alt="image" src="https://github.com/user-attachments/assets/baa8bdbc-c9e1-4352-afc0-84097d8462ed" />
 
 ---
@@ -80,24 +111,42 @@
 ### 🔹 403 Forbidden 발생
 
 - 문제: 웹 페이지 접근 불가  
-- 원인: index.html 권한 600  
-- 해결: chmod 644 index.html  
+- 원인: `index.html` 권한 `600`  
+- 해결: `chmod 644 index.html`  
 - 결과: 정상 출력  
 
 웹 서버는 파일을 실행하는 것이 아니라 읽어서 제공하므로  
 **other 사용자에게 읽기 권한이 반드시 필요하다.**
 
+📖 상세 분석: [1편 — Apache 403: 파일 권한 문제](https://velog.io/@whtngus233/Linux-%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85-%EC%8B%A4%EC%A0%84-%EB%B6%84%EC%84%9D-1%ED%8E%B8-Apache-403-%ED%8C%8C%EC%9D%BC-%EA%B6%8C%ED%95%9C-%EB%AC%B8%EC%A0%9C)
+
+---
+
+### 🔹 디렉터리 x 권한 누락으로 403 발생
+
+- 문제: 파일 권한이 `644`인데도 403 발생  
+- 원인: `/var/www/html` 디렉터리에 `x` 권한 없음  
+- 해결: `chmod 755 /var/www/html`  
+- 결과: 정상 출력  
+
+디렉터리에서 `x`는 실행이 아니라 **경로 통과 권한**이며,  
+파일 권한이 정상이어도 상위 디렉터리에 `x`가 없으면 접근 자체가 차단된다.
+
+📖 상세 분석: [2편 — Apache 403: 디렉터리 x 권한 문제](https://velog.io/@whtngus233/%ED%8C%8C%EC%9D%BC-%EA%B6%8C%ED%95%9C%EC%9D%B4-%EC%A0%95%EC%83%81%EC%9D%B4%EB%8D%94%EB%9D%BC%EB%8F%84-%EA%B2%BD%EB%A1%9C-%EC%A0%91%EA%B7%BC-%EA%B6%8C%ED%95%9C%EC%9D%B4-%EC%97%86%EC%9C%BC%EB%A9%B4-403%EC%9D%B4-%EB%B0%9C%EC%83%9D%ED%95%98%EB%8A%94-%EC%9D%B4%EC%9C%A0)
+
 ---
 
 ### 🔹 FTP 업로드 실패
 
-- 문제: Permission denied  
-- 원인: vsftpd write_enable 비활성화  
-- 해결: 설정 변경 후 재시작  
+- 문제: `Permission denied`  
+- 원인: `vsftpd`의 `write_enable` 비활성화  
+- 해결: 설정 변경 후 서비스 재시작  
 - 결과: 업로드 성공  
 
 FTP 접속 성공과 파일 업로드 가능 여부는 별개이며  
 **서비스 설정과 파일 권한은 구분해서 확인해야 한다.**
+
+📖 상세 분석: [3편 — vsftpd 업로드 실패와 write_enable 설정](https://velog.io/@whtngus233/Permission-denied%EC%9D%98-%EC%9B%90%EC%9D%B8%EC%9D%B4-chmod%EA%B0%80-%EC%95%84%EB%8B%88%EB%9D%BC-%EC%84%9C%EB%B9%84%EC%8A%A4-%EC%84%A4%EC%A0%95%EC%9D%B4%EC%97%88%EB%8D%98-%EC%82%AC%EB%A1%80-%EB%B6%84%EC%84%9D)
 
 ---
 
@@ -123,10 +172,10 @@ FTP 접속 성공과 파일 업로드 가능 여부는 별개이며
 
 ## 4. 핵심 개념 정리
 
-- chmod 755 → 디렉터리 접근 가능 (x 권한 필요)
-- chmod 644 → 웹 서비스 파일 기본 권한
-- 디렉터리는 x 권한이 없으면 접근 자체 불가
-- 웹 서버는 파일을 "실행"하는 것이 아니라 "읽어서 제공"한다
+- `chmod 755` → 디렉터리 접근 가능 (`x` 권한 필요)
+- `chmod 644` → 웹 서비스 파일 기본 권한
+- 디렉터리는 `x` 권한이 없으면 접근 자체 불가
+- 웹 서버는 파일을 "실행"하는 것이 아니라 **"읽어서 제공"** 한다
 - 문제 발생 시 **권한 / 설정 / 네트워크 기준으로 분리해서 분석**
 
 ---
@@ -228,11 +277,11 @@ grep "error" /var/log/syslog
 
 ## 7. 커밋 규칙
 
-- docs: 문서 작성
-- feat: 기능/실습 추가
-- fix: 오류 수정
-- chore: 이미지 및 기타 작업
-- refactor: 구조 개선
+- `docs`: 문서 작성
+- `feat`: 기능/실습 추가
+- `fix`: 오류 수정
+- `chore`: 이미지 및 기타 작업
+- `refactor`: 구조 개선
 
 ---
 
