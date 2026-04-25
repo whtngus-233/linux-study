@@ -1,4 +1,4 @@
-Copy# linux-study
+# linux-study
 
 > Ubuntu 서버에서 직접 겪은 **403 Forbidden / Permission denied / ping 차단**  
 > 트러블슈팅 3건을 권한·서비스·네트워크 레이어로 분리 분석한 학습 기록
