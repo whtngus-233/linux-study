@@ -94,7 +94,7 @@
 ### 4. FTP 업로드 성공
 `vsftpd.conf`의 `write_enable=YES` 활성화 후 클라이언트에서 파일 업로드 성공.
 
-<img width="876" height="688" alt="image" src="https://github.com/user-attachments/assets/baa8bdbc-c9e1-4352-afc0-84097d8462ed" />
+<img width="876" height="435" alt="image" src="https://github.com/user-attachments/assets/69494127-af0b-464c-a4cb-f16d1d563afe" />
 
 ---
 
