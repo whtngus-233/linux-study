@@ -54,17 +54,16 @@
 ## 📸 실습 스크린샷
 
 ### 1. 403 Forbidden 발생
-![403-error](images/403-error.png)
+<img width="873" height="689" alt="image" src="https://github.com/user-attachments/assets/78295ca5-d61c-4f4e-92cc-d584c7ac305a" />
 
 ### 2. 정상 출력
-![web-success](images/web-success.png)
+<img width="876" height="435" alt="image" src="https://github.com/user-attachments/assets/b9c52e34-30f4-47dc-9eb9-d0e505aca02e" />
 
 ### 3. chmod 변경 전/후
-![chmod-before](images/chmod-before.png)
-![chmod-after](images/chmod-after.png)
+<img width="741" height="232" alt="image" src="https://github.com/user-attachments/assets/c7eb2274-8d81-4443-bd42-bd7430ae0cec" />
 
 ### 4. FTP 업로드 성공
-![ftp-upload](images/ftp-upload.png)
+<img width="876" height="688" alt="image" src="https://github.com/user-attachments/assets/baa8bdbc-c9e1-4352-afc0-84097d8462ed" />
 
 ---
 
